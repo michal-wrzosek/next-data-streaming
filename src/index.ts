@@ -1,1 +1,1 @@
-export * from './lib/number';
+export { NextDataStreaming, NextDataStreamingProps } from './lib/server-part';
