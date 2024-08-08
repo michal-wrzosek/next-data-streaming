@@ -2,7 +2,6 @@
   "name": "example-nextjs",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://michal-wrzosek.github.io/test-react-component-lib",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -1,32 +1,108 @@
-# react-component-lib
+# next-data-streaming
 
-This is a boilerplate repository for creating npm packages with React components written in TypeScript and using styled-components.
+_Next.js progressive partial data streaming library._
 
-Medium article explaining step by step how to use this repo to publish your own library to NPM:
-https://medium.com/@xfor/developing-publishing-react-component-library-to-npm-styled-components-typescript-cc8274305f5a
+This library is a twist on Next.js React Server Components (RSC) streaming, but instead of using `<Suspense />` to stream pieces of JSX, you can stream data. That lets you forget about confusing styling in server components (for example `CSS in JS` not being compatible with RSC). Just focus on fetching data in RSCs and let client components arrange this data in a nice looking UI.
 
-## Installation:
+## How to use it?
 
-To install all dependencies run:
+Install library:
 
+```bash
+npm i next-data-streaming
 ```
-npm i
+
+Place `<NextDataStreaming />` component in your page. Here's an [example](example-nextjs/src/app/page.tsx):
+
+```typescript
+import { NextDataStreaming } from 'next-data-streaming';
+import { Client } from './client';
+// and some other imports ...
+
+export default function Page() {
+  return (
+    <NextDataStreaming
+        // Some data that will be available right away (no streaming)
+      data={{
+        article: article,
+      }}
+      // Some data that will be incrementally streamed to Client component
+      dataStream={{
+        navigation: new Promise<NavigationItem[]>((resolve) => setTimeout(() => resolve(navigation), 2000)),
+        user: new Promise<User>((resolve) => setTimeout(() => resolve(user), 3000)),
+        relatedArticles: new Promise<RelatedArticle[]>((resolve) => setTimeout(() => resolve(relatedArticles), 4000)),
+      }}
+      // Your Client component that will receive `data` and `dataStream` as props
+      ClientComponent={Client}
+    />
+  );
+}
 ```
 
-It will install:
+Create your Client component. Don't forget to place `"use client"` directive on top of this component file. Use `ClientComponentProps` to properly type your props. Here's an [example](example-nextjs/src/app/client.tsx):
 
-- `dependencies` and `devDependencies` from ./package.json
-- `peerDependencies` from ./package.json thanks to `install-peers-cli`
-- `dependencies` and `devDependencies` from ./example-nextjs/package.json (example `nextjs` app for testing)
+```typescript
+'use client';
 
-## Developing your library:
+import { ClientComponentProps } from 'next-data-streaming';
+// and some other imports ...
 
-To start developing your library, run `npm run dev`. It will build your library and run example `nextjs` where you can test your components. Each time you make changes to your library or example app, app will be reloaded to reflect your changes.
+type ClientProps = ClientComponentProps<
+  {
+    article: Article;
+  },
+  {
+    navigation: NavigationItem[];
+    user: User;
+    relatedArticles: RelatedArticle[];
+  }
+>;
 
-## Styled-components:
+export const Client = ({ data: { article }, dataStream: { navigation, user, relatedArticles } }: ClientProps) => {
+  return (
+    <main>
+      <Navigation navigation={navigation} user={user} />
+      <Article article={article} />
+      <RelatedArticles relatedArticles={relatedArticles} />
+    </main>
+  );
+};
+```
 
-Developing library with components built with styled-components is challenging because you have to keep only one instance of styled-components. If you would just symlink your library (`file:../` or `npm link`) to example app that is also using styled-components you'll get a console warning about multiple instances of styled-components (even though styled-components are peer dependency) and your styles will be possibly broken. To be able to conveniently develop styled components I am injecting bundled files directly into example app's /src folder and importing it in `client.tsx` file along with type declaration.
+And that's it. Data is `data` will be available right away, and data in `dataStream` will initially be `undefined` and become target types with time, so in your client components you have to handle loading state, for [example](example-nextjs/src/components/related-articles.tsx):
 
-## Typescript
+```typescript
+export const RelatedArticles = ({ relatedArticles }: RelatedArticlesProps) => (
+  <Wrapper>
+    {relatedArticles
+      ? relatedArticles.map(({ title, content, href }, index) => (
+          <Link key={index} href={href}>
+            <Item>
+              <Title>{title}</Title>
+              <Paragraph>{content}</Paragraph>
+            </Item>
+          </Link>
+        ))
+      : new Array(3).fill(null).map((_, index) => <Item key={index} $isLoading />)}
+  </Wrapper>
+);
+```
 
-This boilerplate lets you develop your libraries in Typescript and you can simultaneously test it in Typescript example nextjs app.
+## How this library works?
+
+Inside, this library converts `dataStream` promises to components surrounded by `<Suspense />`. The contents of `<Suspense />` are streamed as stringified JSON to a bunch of hidden `<div />` tags. Later, on client side, the library extract contents of these `<div />` tags to get the data. Currently `MutationObserver` is used to listen to changes to streamed data. Hacky as hell but it seems to work just right.
+
+- [Server part](src/server-part.tsx)
+- [Client part](src/client-part.tsx)
+
+## Final note
+
+If you have some ideas how to improve the library, open an Issue or PR. Also, you can directly write to me:
+
+[https://github.com/michal-wrzosek/](https://github.com/michal-wrzosek/)
+
+michal@wrzosek.pl
+
+---
+
+This library was built using [react-component-lib](https://github.com/michal-wrzosek/react-component-lib)
