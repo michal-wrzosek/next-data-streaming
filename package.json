@@ -1,6 +1,6 @@
 {
   "name": "next-data-streaming",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "module": "dist/index.esm.js",
   "description": "Next.js progressive partial data streaming library",
   "repository": {
@@ -38,7 +38,7 @@
     "build": "rollup -c",
     "build-watch": "rollup -c -w",
     "prepublishOnly": "npm run build",
-    "postinstall": "install-peers -f && cd example-nextjs && npm i",
+    "prepare": "install-peers -f && cd example-nextjs && npm i",
     "start-example": "cd example-nextjs && npm run dev",
     "deploy-example": "npm run build && cd example-nextjs && npm run deploy",
     "dev": "concurrently --kill-others \"npm run build-watch\" \"npm run start-example\"",
