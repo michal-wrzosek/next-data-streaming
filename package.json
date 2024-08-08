@@ -1,6 +1,6 @@
 {
   "name": "next-data-streaming",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "module": "dist/index.js",
   "description": "Next.js progressive partial data streaming library",
   "repository": {
