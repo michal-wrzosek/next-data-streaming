@@ -10,6 +10,10 @@ For example, here you see a website that loads right away with SSR article conte
 
 ![demo](next-data-streaming.gif)
 
+YouTube video about this library:
+
+[![youtube](next-data-streaming-youtube.png)](https://youtu.be/Mim3BTPZkcw)
+
 ## How to use it?
 
 Install library:
