@@ -1,6 +1,6 @@
 # next-data-streaming
 
-[![npm version](https://badge.fury.io/js/next-data-streaming.svg)](//npmjs.com/package/next-data-streaming)
+[![NPM Version](https://img.shields.io/npm/v/next-data-streaming)](https://npmjs.com/package/next-data-streaming)
 
 _Next.js progressive partial data streaming library._
 
