@@ -30,7 +30,7 @@ export default function Page() {
       data={{
         article: article,
       }}
-      // Some data that will be incrementally streamed to Client component
+      // Some data that will be independently streamed to Client component
       dataStream={{
         navigation: new Promise<NavigationItem[]>((resolve) => setTimeout(() => resolve(navigation), 2000)),
         user: new Promise<User>((resolve) => setTimeout(() => resolve(user), 3000)),
