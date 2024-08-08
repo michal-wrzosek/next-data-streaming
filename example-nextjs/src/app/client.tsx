@@ -1,6 +1,7 @@
 'use client';
 
-import { ClientComponentProps } from '@/react-component-lib';
+// import { ClientComponentProps } from '@/react-component-lib';
+import { ClientComponentProps } from 'next-data-streaming';
 import styled from 'styled-components';
 import { Article } from '@/components/article';
 import { Navigation, NavigationItem, User } from '@/components/navigation';

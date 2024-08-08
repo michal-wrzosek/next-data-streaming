@@ -1,4 +1,5 @@
-import { NextDataStreaming } from '../react-component-lib';
+// import { NextDataStreaming } from '../react-component-lib';
+import { NextDataStreaming } from 'next-data-streaming';
 import { NavigationItem, User } from '@/components/navigation';
 import { Client } from './client';
 import { RelatedArticle } from '@/components/related-articles';

@@ -4,6 +4,10 @@ _Next.js progressive partial data streaming library._
 
 This library is a twist on Next.js React Server Components (RSC) streaming, but instead of using `<Suspense />` to stream pieces of JSX, you can stream data. That lets you forget about confusing styling in server components (for example `CSS in JS` not being compatible with RSC). Just focus on fetching data in RSCs and let client components arrange this data in a nice looking UI.
 
+For example here you see a website that loads right away with SSR article content but later streams data for navigation, user and related articles (all of them are streamed independently of each other):
+
+![demo](next-data-streaming.gif)
+
 ## How to use it?
 
 Install library:
